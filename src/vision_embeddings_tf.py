@@ -108,16 +108,16 @@ class FoundationalCVModel:
             self.base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=input_layer)
         elif backbone == 'convnextv2_tiny':
             # TODO: Load the ConvNeXtV2 Tiny model from transformers
-            self.base_model = TFConvNextV2Model.from_pretained('facebook/convextv2-tiny-1k-224')
+            self.base_model = TFConvNextV2Model.from_pretrained('facebook/convnextv2-tiny-1k-224')
         elif backbone == 'convnextv2_base':
             # TODO: Load the ConvNeXtV2 Base model from transformers
-            self.base_model = TFConvNextV2Model.from_pretained('facebook/convextv2-base-1k-224')
+            self.base_model = TFConvNextV2Model.from_pretrained('facebook/convnextv2-base-1k-224')
         elif backbone == 'convnextv2_large':
             # TODO: Load the ConvNeXtV2 Large model from transformers
-            self.base_model = TFConvNextV2Model.from_pretrained('facebook/convextv2-large-1k-244')
+            self.base_model = TFConvNextV2Model.from_pretrained('facebook/convnextv2-large-1k-244')
         elif backbone == 'swin_tiny':
             # TODO: Load the Swin Transformer Tiny model from transformers
-            self.base_model = TFSwinModel.from_pretained('facebook/swin-tiny-patch4-window7-224')
+            self.base_model = TFSwinModel.from_pretrained('facebook/swin-tiny-patch4-window7-224')
         elif backbone == 'swin_small':
             # TODO: Load the Swin Transformer Small model from transformers
             self.base_model = TFSwinModel.from_pretrained('facebook/swin-small-patch4-window7-224')

@@ -158,9 +158,9 @@ class HuggingFaceEmbeddings:
         """
         self.model_name = model_name
         # TODO: Load the Hugging Face tokenizer from a pre-trained model
-        self.tokenizer = None
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name, use_fast=True)
         # TODO: Load the model from the Hugging Face model hub from the specified model name
-        self.model = None
+        self.model = AutoModel.from_pretrained(self.model_name, use_fast=True)
         self.path = path
         self.save_path = save_path or 'Models'
         
@@ -188,20 +188,26 @@ class HuggingFaceEmbeddings:
             np.ndarray: A numpy array containing the embedding vector for the input text.
         """
         ### TODO: Tokenize the input text using the Hugging Face tokenizer
-        inputs = None
+        inputs = self.tokenizer(
+            text,
+            padding='max_length',
+            truncation=True,
+            max_length=512,
+            return_tensors='pt',
+        )
         
         # Move the inputs to the device
         inputs = {key: value.to(self.device) for key, value in inputs.items()}
         
         with torch.no_grad():
             # TODO: Generate the embeddings using the Hugging Face model from the tokenized input
-            outputs = None
+            outputs = self.model(**inputs)
         
         # TODO: Extract the embeddings from the model output, send to cpu and return the numpy array
         # Remember that the model will return embeddings for the whole sequence, so you may need to aggregate them
         # Get the last hidden state and take the mean across the sequence dimension
         # The resulting tensor should have shape [batch_size, hidden_size]
-        embeddings = None
+        embeddings = outputs.last_hidden_state.mean(dim=1).squeeze().cpu().numpy()
         
         return embeddings
 
@@ -210,9 +216,10 @@ class HuggingFaceEmbeddings:
         df = pd.read_csv(self.path)
         # TODO: Generate embeddings for the specified column using the `get_embedding` method
         # Make sure to convert the embeddings to a list before saving to the DataFrame
-        df["embeddings"] = None
+        df["embeddings"] = df[column].apply(lambda x: self.get_embedding(x).tolist())
         
         os.makedirs(directory, exist_ok=True)
         # TODO: Save the DataFrame with the embeddings to a new CSV file in the specified directory
+        df.to_csv(os.path.join(directory, file), index=False)
         
 
